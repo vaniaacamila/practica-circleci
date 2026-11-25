@@ -1,0 +1,39 @@
+
+version: 2.1
+
+jobs:
+  ejecutar-pruebas:
+    docker:
+      - image: cimg/python:3.12
+
+    steps:
+      - checkout
+
+      - run:
+          name: Instalar dependencias
+          command: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+
+      - run:
+          name: Comprobar codigo
+          command: python -m compileall .
+
+      - run:
+          name: Ejecutar pruebas automatizadas
+          command: |
+            mkdir -p test-results
+            set -o pipefail
+            python manage.py test 2>&1 | tee test-results/resultados.txt
+
+      - when:
+          condition: always
+          steps:
+            - store_artifacts:
+                path: test-results
+                destination: resultados-pruebas
+
+workflows:
+  ejecutar-pipeline:
+    jobs:
+      - ejecutar-pruebas
