@@ -14,4 +14,4 @@ class PruebasIniciales(TestCase):
         
     def test_suma_incorrecta(self):
         resultado = 2 + 2
-        self.assertEqual(resultado, 5)
+        self.assertEqual(resultado, 4)
